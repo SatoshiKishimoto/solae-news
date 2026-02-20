@@ -1,0 +1,28 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>Solae 最新情報</title>
+</head>
+<body>
+<h2>Solae 最新情報</h2>
+<div id="list">読み込み中...</div>
+
+<script>
+const FEED="https://solae.corpblog.jp/index.rdf";
+fetch("https://api.allorigins.win/raw?url="+encodeURIComponent(FEED))
+.then(r=>r.text())
+.then(t=>{
+ const items=[...t.matchAll(/<item[\s\S]*?<\/item>/g)];
+ const html=items.slice(0,8).map(x=>{
+   const i=x[0];
+   const title=i.match(/<title>(.*?)<\/title>/)?.[1];
+   const link=i.match(/<link>(.*?)<\/link>/)?.[1];
+   return `<p><a href="${link}" target="_blank">${title}</a></p>`;
+ }).join("");
+ document.getElementById("list").innerHTML=html;
+});
+</script>
+</body>
+</html>
